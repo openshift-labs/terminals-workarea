@@ -409,8 +409,7 @@
                 "source": {
                     "type": "Git",
                     "git": {
-                        "uri": "https://github.com/openshift-labs/workshop-terminals.git",
-                        "ref": "1.0.0"
+                        "uri": "https://github.com/openshift-labs/workshop-terminals.git"
                     },
                     "contextDir": "terminal"
                 },
