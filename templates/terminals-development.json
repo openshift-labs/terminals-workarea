@@ -121,7 +121,7 @@
                 "source": {
                     "type": "Git",
                     "git": {
-                        "uri": "https://github.com/openshift-labs/jupyterhub-gateway.git",
+                        "uri": "https://github.com/openshift-labs/jupyterhub-quickstart.git",
                         "ref": "2.0.0"
                     }
                 },
