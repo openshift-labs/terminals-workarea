@@ -13,16 +13,6 @@ if [[ "$STATUS" != "0" ]]; then
     rm /tmp/passwd
 fi
 
-# Preserve select environment variables so can set in terminal session.
-
-if [ ! -s /opt/workshop/etc/envvars ]; then
-    env | egrep "^PATH=" >> /opt/workshop/etc/envvars
-    env | egrep "^LD_LIBRARY_PATH=" >> /opt/workshop/etc/envvars
-    env | egrep "^KUBERNETES_" >> /opt/workshop/etc/envvars
-    env | egrep "^HOSTNAME=" >> /opt/workshop/etc/envvars
-    env | egrep "^JUPYTERHUB_USER=" >> /opt/workshop/etc/envvars
-fi
-
 # Setup 'oc' client in advance if configured to be using local OpenShift.
 
 CA_FILE="/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"

@@ -112,10 +112,6 @@ COPY etc/. /opt/workshop/etc/
 RUN echo "auth required pam_wheel.so use_uid" >> /etc/pam.d/su && \
     chmod g+w /etc/passwd
 
-RUN touch /opt/workshop/etc/envvars && \
-    chown -R 1001:0 /opt/workshop/etc/envvars && \
-    chmod g+w /opt/workshop/etc/envvars
-
 RUN mkdir -p /opt/app-root/etc/init.d && \
     mkdir -p /opt/app-root/etc/profile.d && \
     chown -R 1001:0 /opt/app-root && \
