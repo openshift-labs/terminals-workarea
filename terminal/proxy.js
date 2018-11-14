@@ -5,6 +5,7 @@ var http = require('http'),
 var uri_root_path = process.env.URI_ROOT_PATH || ''
 
 var terminal_app = 'http://127.0.0.1:8081';
+var terminal_root_url = '^' + uri_root_path + '/?$'
 
 var auth_username = process.env.AUTH_USERNAME;
 var auth_password = process.env.AUTH_PASSWORD;
@@ -28,6 +29,8 @@ var server = http.createServer(function(req, res) {
 	res.setHeader('WWW-Authenticate', 'Basic realm="Terminal"');
 
 	res.end('Login required.');
+
+        return;
     }
     else {
       var tmp = auth.split(' ');
@@ -43,8 +46,21 @@ var server = http.createServer(function(req, res) {
 	res.setHeader('WWW-Authenticate', 'Basic realm="Terminal"');
 
 	res.end('Access denied.');
+
+        return;
       }
     }
+  }
+
+  var parsed_url = url.parse(req.url);
+
+  if (parsed_url.pathname.match(terminal_root_url)) {
+    res.statusCode = 302;
+    res.setHeader('Location', uri_root_path + '/session/1');
+
+    res.end('Redirect to named session.');
+
+    return;
   }
 
   proxy.web(req, res, { target: terminal_app }, on_error);
