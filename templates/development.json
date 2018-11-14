@@ -27,6 +27,10 @@
             "required": false
         },
         {
+            "name": "IDLE_TIMEOUT",
+            "value": "7200"
+        },
+        {
             "name": "TERMINAL_IMAGE",
             "value": "",
             "required": false
