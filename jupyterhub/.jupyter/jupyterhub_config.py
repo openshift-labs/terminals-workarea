@@ -86,8 +86,6 @@ api_client = DynamicClient(ApiClient())
 route_resource = api_client.resources.get(
      api_version='route.openshift.io/v1', kind='Route')
 
-route_list = oapi_client.list_namespaced_route(namespace)
-
 routes = route_resource.get(namespace=namespace)
 
 def extract_hostname(routes, name):
