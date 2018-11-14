@@ -111,8 +111,9 @@
                 "source": {
                     "type": "Git",
                     "git": {
-                        "uri": "https://github.com/openshift-labs/terminals-workarea.git"
-                    }
+                        "uri": "https://github.com/openshift-labs/workshop-terminals.git"
+                    },
+                    "contextDir": "terminal"
                 },
                 "strategy": {
                     "type": "Docker",
