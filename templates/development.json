@@ -178,8 +178,7 @@
                 "source": {
                     "type": "Git",
                     "git": {
-                        "uri": "https://github.com/openshift-labs/workshop-terminals.git",
-                        "ref": "2.0.0"
+                        "uri": "https://github.com/openshift-labs/workshop-terminals.git"
                     },
 		    "contextDir": "jupyterhub"
                 },
@@ -380,7 +379,7 @@
             "kind": "ImageStream",
             "apiVersion": "v1",
             "metadata": {
-                "name": "${APPLICATION_NAME}-terminal",
+                "name": "${APPLICATION_NAME}-usr",
                 "labels": {
                     "app": "${APPLICATION_NAME}"
                 }
@@ -393,7 +392,7 @@
             "kind": "BuildConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "${APPLICATION_NAME}-terminal",
+                "name": "${APPLICATION_NAME}-usr",
                 "labels": {
                     "app": "${APPLICATION_NAME}"
                 }
@@ -441,7 +440,7 @@
                 "output": {
                     "to": {
                         "kind": "ImageStreamTag",
-                        "name": "${APPLICATION_NAME}-terminal:latest"
+                        "name": "${APPLICATION_NAME}-usr:latest"
                     }
                 }
             }
