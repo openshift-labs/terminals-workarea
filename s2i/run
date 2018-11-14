@@ -1,0 +1,64 @@
+#!/bin/bash
+
+set -x
+
+# Add entry to /etc/passwd file.
+
+whoami &> /dev/null || STATUS=$? && true
+
+if [[ "$STATUS" != "0" ]]; then
+    cat /etc/passwd | sed -e "s/^default:/builder:/" > /tmp/passwd
+    echo "default:x:$(id -u):$(id -g):,,,:/opt/app-root/src:/bin/bash" >> /tmp/passwd
+    cat /tmp/passwd > /etc/passwd
+    rm /tmp/passwd
+fi
+
+# Preserve select environment variables so can set in terminal session.
+
+if [ ! -s /opt/workshop/etc/envvars ]; then
+    env | egrep "^PATH=" >> /opt/workshop/etc/envvars
+    env | egrep "^LD_LIBRARY_PATH=" >> /opt/workshop/etc/envvars
+    env | egrep "^KUBERNETES_" >> /opt/workshop/etc/envvars
+    env | egrep "^HOSTNAME=" >> /opt/workshop/etc/envvars
+    env | egrep "^JUPYTERHUB_USER=" >> /opt/workshop/etc/envvars
+fi
+
+# Setup 'oc' client in advance if configured to be using local OpenShift.
+
+CA_FILE="/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+TOKEN_FILE="/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+if [ x"$KUBERNETES_PORT_443_TCP_ADDR" != x"" ]; then
+    if [ -f $CA_FILE ]; then
+        OC_CA_ARGS="--certificate-authority $CA_FILE"
+    else
+        OC_CA_ARGS="--insecure-skip-tls-verify"
+    fi
+
+    oc config set-cluster local $OC_CA_ARGS \
+            --server "https://$KUBERNETES_PORT_443_TCP_ADDR" 
+
+    oc config set-context local --cluster local
+    oc config use-context local
+
+    if [ -f $TOKEN_FILE ]; then
+        oc login $OC_CA_ARGS --token `cat $TOKEN_FILE` > /dev/null 2>&1
+    fi
+fi
+
+# Run startup actions if supplied.
+
+if [ -x /opt/app-root/etc/init.d/rc.local ]; then
+    /opt/app-root/etc/init.d/rc.local
+fi
+
+# Run workarea specific initialisation.
+
+if [ -x /opt/app-root/src/.workshop/setup ]; then
+    /opt/app-root/src/.workshop/setup
+fi
+
+# Run supervisord.
+
+exec /opt/workshop/bin/supervisord --nodaemon \
+    --configuration /opt/workshop/etc/supervisord.conf
