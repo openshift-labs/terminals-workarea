@@ -379,7 +379,7 @@
             "kind": "ImageStream",
             "apiVersion": "v1",
             "metadata": {
-                "name": "${APPLICATION_NAME}-usr",
+                "name": "${APPLICATION_NAME}-img",
                 "labels": {
                     "app": "${APPLICATION_NAME}"
                 }
@@ -392,7 +392,7 @@
             "kind": "BuildConfig",
             "apiVersion": "v1",
             "metadata": {
-                "name": "${APPLICATION_NAME}-usr",
+                "name": "${APPLICATION_NAME}-img",
                 "labels": {
                     "app": "${APPLICATION_NAME}"
                 }
@@ -440,7 +440,7 @@
                 "output": {
                     "to": {
                         "kind": "ImageStreamTag",
-                        "name": "${APPLICATION_NAME}-usr:latest"
+                        "name": "${APPLICATION_NAME}-img:latest"
                     }
                 }
             }
