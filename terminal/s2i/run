@@ -42,7 +42,7 @@ if [ -x /opt/app-root/etc/init.d/rc.local ]; then
     /opt/app-root/etc/init.d/rc.local
 fi
 
-# Run workarea specific initialisation.
+# Run workshop specific initialisation.
 
 if [ -x /opt/app-root/src/.workshop/setup ]; then
     /opt/app-root/src/.workshop/setup
