@@ -94,9 +94,6 @@
                 "labels": {
                     "app": "${APPLICATION_NAME}"
                 }
-            },
-            "lookupPolicy": {
-                "local": true
             }
         },
         {
@@ -150,9 +147,6 @@
                 "labels": {
                     "app": "${APPLICATION_NAME}"
                 }
-            },
-            "lookupPolicy": {
-                "local": true
             }
         },
 
@@ -383,8 +377,10 @@
                     "app": "${APPLICATION_NAME}"
                 }
             },
-            "lookupPolicy": {
-                "local": true
+            "spec": {
+                "lookupPolicy": {
+                    "local": true
+                }
             }
         },
         {
