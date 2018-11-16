@@ -2,7 +2,7 @@
     "kind": "Template",
     "apiVersion": "v1",
     "metadata": {
-        "name": "workshop-terminals-development",
+        "name": "workshop-terminals-production",
         "annotations": {
             "openshift.io/display-name": "Terminal Spawner"
         }
@@ -32,22 +32,12 @@
         },
         {
             "name": "TERMINAL_IMAGE",
-            "value": "",
-            "required": false
-        },
-        {
-            "name": "OC_VERSION",
-            "value": "3.11.43",
+            "value": "quay.io/osevg/terminal-workspace:master",
             "required": true
         },
         {
-            "name": "ODO_VERSION",
-            "value": "0.0.14",
-            "required": true
-        },
-        {
-            "name": "KUBECTL_VERSION",
-            "value": "1.11.0",
+            "name": "JUPYTERHUB_IMAGE",
+            "value": "quay.io/osevg/terminal-jupyterhub:master",
             "required": true
         }
     ],
@@ -90,107 +80,22 @@
             "kind": "ImageStream",
             "apiVersion": "v1",
             "metadata": {
-                "name": "${APPLICATION_NAME}-hub-s2i",
-                "labels": {
-                    "app": "${APPLICATION_NAME}"
-                }
-            }
-        },
-        {
-            "kind": "BuildConfig",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "${APPLICATION_NAME}-hub-s2i",
+                "name": "${APPLICATION_NAME}-hub",
                 "labels": {
                     "app": "${APPLICATION_NAME}"
                 }
             },
-            "spec": {
-                "triggers": [
-                    {
-                        "type": "ConfigChange"
-                    },
-                    {
-                        "type": "ImageChange"
-                    }
-                ],
-                "source": {
-                    "type": "Git",
-                    "git": {
-                        "uri": "https://github.com/openshift-labs/jupyterhub-quickstart.git",
-                        "ref": "2.0.0"
-                    }
-                },
-                "strategy": {
-                    "type": "Source",
-                    "sourceStrategy": {
-                        "from": {
-                            "kind": "ImageStreamTag",
-                            "name": "python:3.6",
-                            "namespace": "openshift"
-                        }
-                    }
-                },
-                "output": {
-                    "to": {
-                        "kind": "ImageStreamTag",
-                        "name": "${APPLICATION_NAME}-hub-s2i:latest"
-                    }
-                }
-            }
-        },
-        {
-            "kind": "ImageStream",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "${APPLICATION_NAME}-hub-img",
-                "labels": {
-                    "app": "${APPLICATION_NAME}"
-                }
-            }
-        },
-
-        {
-            "kind": "BuildConfig",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "${APPLICATION_NAME}-hub-img",
-                "labels": {
-                    "app": "${APPLICATION_NAME}"
-                }
-            },
-            "spec": {
-                "triggers": [
-                    {
-                        "type": "ConfigChange"
-                    },
-                    {
-                        "type": "ImageChange"
-                    }
-                ],
-                "source": {
-                    "type": "Git",
-                    "git": {
-                        "uri": "https://github.com/openshift-labs/workshop-terminals.git"
-                    },
-		    "contextDir": "jupyterhub"
-                },
-                "strategy": {
-                    "type": "Source",
-                    "sourceStrategy": {
-                        "from": {
-                            "kind": "ImageStreamTag",
-                            "name": "${APPLICATION_NAME}-hub-s2i:latest"
-                        }
-                    }
-                },
-                "output": {
-                    "to": {
-                        "kind": "ImageStreamTag",
-                        "name": "${APPLICATION_NAME}-hub-img:latest"
-                    }
-                }
-            }
+	    "spec": {
+		"tags": [
+		    {
+			"name": "latest",
+			"from": {
+			    "kind": "DockerImage",
+			    "name": "${JUPYTERHUB_IMAGE}"
+			}
+		    }
+		]
+	    }
         },
         {
             "kind": "DeploymentConfig",
@@ -218,7 +123,7 @@
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
-                                "name": "${APPLICATION_NAME}-hub-img:latest"
+                                "name": "${APPLICATION_NAME}-hub:latest"
                             }
                         }
                     }
@@ -240,7 +145,7 @@
                         "containers": [
                             {
                                 "name": "spawner",
-                                "image": "${APPLICATION_NAME}-hub-img:latest",
+                                "image": "${APPLICATION_NAME}-hub:latest",
                                 "ports": [
                                     {
                                         "containerPort": 8080,
@@ -251,10 +156,6 @@
                                     {
                                         "name": "APPLICATION_NAME",
                                         "value": "${APPLICATION_NAME}"
-                                    },
-                                    {
-                                        "name": "TERMINAL_IMAGE",
-                                        "value": "${TERMINAL_IMAGE}"
                                     },
                                     {
                                         "name": "MEMORY_SIZE",
@@ -380,64 +281,17 @@
             "spec": {
                 "lookupPolicy": {
                     "local": true
-                }
-            }
-        },
-        {
-            "kind": "BuildConfig",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "${APPLICATION_NAME}-app",
-                "labels": {
-                    "app": "${APPLICATION_NAME}"
-                }
-            },
-            "spec": {
-                "triggers": [
-                    {
-                        "type": "ConfigChange"
-                    },
-                    {
-                        "type": "ImageChange"
-                    }
-                ],
-                "source": {
-                    "type": "Git",
-                    "git": {
-                        "uri": "https://github.com/openshift-labs/workshop-terminals.git"
-                    },
-                    "contextDir": "terminal"
                 },
-                "strategy": {
-                    "type": "Docker",
-                    "dockerStrategy": {
-                        "from": {
-                            "kind": "DockerImage",
-                            "name": "centos/s2i-base-centos7:latest"
-                        },
-                        "buildArgs": [
-                            {
-                                "name": "OC_VERSION",
-                                "value": "${OC_VERSION}"
-                            },
-                            {
-                                "name": "ODO_VERSION",
-                                "value": "${ODO_VERSION}"
-                            },
-                            {
-                                "name": "KUBECTL_VERSION",
-                                "value": "${KUBECTL_VERSION}"
-                            }
-                        ]
-                    }
-                },
-                "output": {
-                    "to": {
-                        "kind": "ImageStreamTag",
-                        "name": "${APPLICATION_NAME}-app:latest"
-                    }
-                }
-            }
+		"tags": [
+		    {
+			"name": "latest",
+			"from": {
+			    "kind": "DockerImage",
+			    "name": "${TERMINAL_IMAGE}"
+			}
+		    }
+		]
+	    }
         }
     ]
 }

@@ -29,7 +29,7 @@ terminal_image = os.environ.get('TERMINAL_IMAGE')
 
 if not terminal_image:
     c.KubeSpawner.image_spec = (
-            'docker-registry.default.svc:5000/%s/%s-app-s2i:latest' %
+            'docker-registry.default.svc:5000/%s/%s-app:latest' %
             (namespace, application_name))
 else:
     c.KubeSpawner.image_spec = terminal_image
