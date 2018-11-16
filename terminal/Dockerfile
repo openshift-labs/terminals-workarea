@@ -94,7 +94,7 @@ RUN HOME=/opt/workshop && \
 RUN HOME=/opt/workshop && \
     cd /opt/workshop && \
     source scl_source enable rh-nodejs8 && \
-    npm install http-proxy
+    npm install express http-proxy-middleware express-basic-auth
 
 COPY proxy.js /opt/workshop/
 
