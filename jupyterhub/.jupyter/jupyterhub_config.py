@@ -107,6 +107,9 @@ c.JupyterHub.admin_access = True
 
 c.Authenticator.admin_users = set(os.environ.get('ADMIN_USERS', '').split())
 
+c.Spawner.environment = dict(
+        JUPYTERHUB_ROUTE='https://%s' % public_hostname)
+
 # Override URL prefix for application and copy files to volume.
 
 c.KubeSpawner.user_storage_pvc_ensure = True
