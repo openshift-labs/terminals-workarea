@@ -89,15 +89,19 @@ RUN HOME=/opt/workshop && \
     pip install butterfly==3.2.5 && \
     rm /opt/app-root/etc/scl_enable
 
-# Install Node.js proxy.
+# Install Node.js packages.
 
 RUN HOME=/opt/workshop && \
     cd /opt/workshop && \
     source scl_source enable rh-nodejs8 && \
+    mkdir /opt/app-root/node_modules && \
+    ln -s /opt/app-root/node_modules /opt/workshop/node_modules && \
     npm install express http-proxy-middleware express-basic-auth \
-        simple-oauth2 express-session uuid
+        simple-oauth2 uuid express-session && \
+    chown -R 1001:0 /opt/app-root/node_modules && \
+    fix-permissions /opt/app-root/node_modules
 
-COPY proxy.js /opt/workshop/
+COPY gateway.js /opt/workshop/
 
 # Finish environment setup.
 
@@ -109,12 +113,14 @@ COPY s2i/. /usr/libexec/s2i/
 
 COPY bin/. /opt/workshop/bin/
 COPY etc/. /opt/workshop/etc/
+COPY routes/. /opt/workshop/routes/
 
 RUN echo "auth required pam_wheel.so use_uid" >> /etc/pam.d/su && \
     chmod g+w /etc/passwd
 
 RUN mkdir -p /opt/app-root/etc/init.d && \
     mkdir -p /opt/app-root/etc/profile.d && \
+    mkdir -p /opt/app-root/routes && \
     chown -R 1001:0 /opt/app-root && \
     fix-permissions /opt/app-root
 

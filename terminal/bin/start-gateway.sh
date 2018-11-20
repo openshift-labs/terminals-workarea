@@ -14,4 +14,4 @@ fi
 
 cd /opt/workshop
 
-exec node /opt/workshop/proxy.js
+exec node /opt/workshop/gateway.js

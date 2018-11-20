@@ -1,10 +1,11 @@
 var express = require('express');
-var proxy = require('http-proxy-middleware');
 var basic_auth = require('express-basic-auth')
 var session = require('express-session');
 var uuid = require('uuid');
 var http = require('http');
+var path = require('path');
 var url = require('url');
+var fs = require('fs');
 
 // Setup the root application. Everything will actually be under a
 // mount point corresponding to the specific user. This is added in
@@ -216,31 +217,51 @@ if (jupyterhub_client_id) {
     })
 }
 
-// By default redirect to terminal application. Have major components
-// mounted as sub URLs to allow other applications to be hosted behind
-// this application if necessary.
+// Setup handler for default page. If no overrides of any sort are
+// defined then redirect to /terminal.
 
-app.get('^' + uri_root_path + '/?$', function (req, res) {
-    res.redirect(uri_root_path + '/terminal');
-})
+var default_route = process.env.DEFAULT_ROUTE || '/terminal';
 
-// Setup proxying to terminal application. If no terminal session is
-// provided, redirect to session 1. This ensures user always get the
-// same session and not a new one each time if refresh the web browser
-// or access same URL from another browser window.
+var default_index = '/opt/workshop/routes/index.js';
+var override_index = '/opt/app-root/routes/index.js';
 
-terminal_app = express();
+if (fs.existsSync(override_index)) {
+    console.log('Set index to', override_index); 
+    app.get('^' + uri_root_path + '/?$', require(override_index));
+}
+else if (fs.existsSync(default_index)) {
+    console.log('Set index to', default_index); 
+    app.get('^' + uri_root_path + '/?$', require(default_index));
+}
+else {
+    console.log('Set index to', default_route); 
+    app.get('^' + uri_root_path + '/?$', function (req, res) {
+        res.redirect(uri_root_path + default_route);
+    })
+}
 
-app.use(uri_root_path + '/terminal', terminal_app);
+// Setup routes for handlers.
 
-terminal_app.get('^/?$', function (req, res) {
-    res.redirect(req.baseUrl + '/session/1');
-})
+function install_routes(directory) {
+    var files = fs.readdirSync(directory);
+    if (fs.existsSync(directory)) {
+        for (var i=0; i<files.length; i++) {
+            var filename = files[i];
+            if (filename.endsWith('.js')) {
+                var basename = filename.split('.').slice(0, -1).join('.');
+                if (basename != 'index') {
+                    var pathname = path.join(directory, filename);
+                    console.log('Install route for', pathname);
+                    var router = require(pathname);
+                    app.use(uri_root_path + '/' + basename, router);
+                }
+            }
+        }
+    }
+}
 
-terminal_app.use(proxy({
-    target: 'http://127.0.0.1:8081',
-    ws: true
-}));
+install_routes('/opt/app-root/routes');
+install_routes('/opt/workshop/routes');
 
 // Start listening for requests.
 
