@@ -37,7 +37,7 @@
         },
         {
             "name": "OC_VERSION",
-            "value": "3.11.43",
+            "value": "3.11",
             "required": true
         },
         {
@@ -47,7 +47,7 @@
         },
         {
             "name": "KUBECTL_VERSION",
-            "value": "1.11.0",
+            "value": "1.11",
             "required": true
         }
     ],
@@ -173,7 +173,7 @@
                     "git": {
                         "uri": "https://github.com/openshift-labs/workshop-terminals.git"
                     },
-		    "contextDir": "jupyterhub"
+                    "contextDir": "jupyterhub"
                 },
                 "strategy": {
                     "type": "Source",
@@ -271,6 +271,18 @@
                                     {
                                         "name": "IDLE_TIMEOUT",
                                         "value": "${IDLE_TIMEOUT}"
+                                    },
+                                    {
+                                        "name": "OC_VERSION",
+                                        "value": "${OC_VERSION}"
+                                    },
+                                    {
+                                        "name": "ODO_VERSION",
+                                        "value": "${ODO_VERSION}"
+                                    },
+                                    {
+                                        "name": "KUBECTL_VERSION",
+                                        "value": "${KUBECTL_VERSION}"
                                     }
                                 ],
                                 "volumeMounts": [
@@ -414,21 +426,7 @@
                         "from": {
                             "kind": "DockerImage",
                             "name": "centos/s2i-base-centos7:latest"
-                        },
-                        "buildArgs": [
-                            {
-                                "name": "OC_VERSION",
-                                "value": "${OC_VERSION}"
-                            },
-                            {
-                                "name": "ODO_VERSION",
-                                "value": "${ODO_VERSION}"
-                            },
-                            {
-                                "name": "KUBECTL_VERSION",
-                                "value": "${KUBECTL_VERSION}"
-                            }
-                        ]
+                        }
                     }
                 },
                 "output": {

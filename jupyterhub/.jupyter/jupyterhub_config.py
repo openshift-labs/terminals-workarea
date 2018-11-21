@@ -110,6 +110,13 @@ c.Authenticator.admin_users = set(os.environ.get('ADMIN_USERS', '').split())
 c.Spawner.environment = dict(
         JUPYTERHUB_ROUTE='https://%s' % public_hostname)
 
+if os.environ.get('OC_VERSION'):
+    c.Spawner.environment['OC_VERSION'] = os.environ.get('OC_VERSION')
+if os.environ.get('ODO_VERSION'):
+    c.Spawner.environment['ODO_VERSION'] = os.environ.get('ODO_VERSION')
+if os.environ.get('KUBECTL_VERSION'):
+    c.Spawner.environment['KUBECTL_VERSION'] = os.environ.get('KUBECTL_VERSION')
+
 # Override URL prefix for application and copy files to volume.
 
 c.KubeSpawner.user_storage_pvc_ensure = True

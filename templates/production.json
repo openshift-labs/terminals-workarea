@@ -39,6 +39,21 @@
             "name": "JUPYTERHUB_IMAGE",
             "value": "quay.io/osevg/terminal-jupyterhub:master",
             "required": true
+        },
+        {
+            "name": "OC_VERSION",
+            "value": "3.11",
+            "required": true
+        },
+        {
+            "name": "ODO_VERSION",
+            "value": "0.0.14",
+            "required": true
+        },
+        {
+            "name": "KUBECTL_VERSION",
+            "value": "1.11",
+            "required": true
         }
     ],
     "objects": [
@@ -85,17 +100,17 @@
                     "app": "${APPLICATION_NAME}"
                 }
             },
-	    "spec": {
-		"tags": [
-		    {
-			"name": "latest",
-			"from": {
-			    "kind": "DockerImage",
-			    "name": "${JUPYTERHUB_IMAGE}"
-			}
-		    }
-		]
-	    }
+            "spec": {
+                "tags": [
+                    {
+                        "name": "latest",
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "${JUPYTERHUB_IMAGE}"
+                        }
+                    }
+                ]
+            }
         },
         {
             "kind": "DeploymentConfig",
@@ -172,6 +187,18 @@
                                     {
                                         "name": "IDLE_TIMEOUT",
                                         "value": "${IDLE_TIMEOUT}"
+                                    },
+                                    {
+                                        "name": "OC_VERSION",
+                                        "value": "${OC_VERSION}"
+                                    },
+                                    {
+                                        "name": "ODO_VERSION",
+                                        "value": "${ODO_VERSION}"
+                                    },
+                                    {
+                                        "name": "KUBECTL_VERSION",
+                                        "value": "${KUBECTL_VERSION}"
                                     }
                                 ],
                                 "volumeMounts": [
@@ -282,16 +309,16 @@
                 "lookupPolicy": {
                     "local": true
                 },
-		"tags": [
-		    {
-			"name": "latest",
-			"from": {
-			    "kind": "DockerImage",
-			    "name": "${TERMINAL_IMAGE}"
-			}
-		    }
-		]
-	    }
+                "tags": [
+                    {
+                        "name": "latest",
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "${TERMINAL_IMAGE}"
+                        }
+                    }
+                ]
+            }
         }
     ]
 }

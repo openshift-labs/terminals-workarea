@@ -35,36 +35,41 @@ RUN HOME=/root && \
     rpm -V $INSTALL_PKGS && \
     yum -y clean all --enablerepo='*'
 
-ENV MAVEN_VERSION 3.3.9
 RUN HOME=/root && \
-    (curl -s -0 http://www.eu.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | \
+    (curl -s -0 http://www.eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz | \
     tar -zx -C /usr/local) && \
-    mv /usr/local/apache-maven-$MAVEN_VERSION /usr/local/maven && \
+    mv /usr/local/apache-maven-3.3.9 /usr/local/maven && \
     ln -sf /usr/local/maven/bin/mvn /usr/local/bin/mvn
 
-ENV GRADLE_VERSION 2.6
 RUN HOME=/root && \
-    curl -sL -0 https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip -o /tmp/gradle-$GRADLE_VERSION-bin.zip && \
-    unzip /tmp/gradle-$GRADLE_VERSION-bin.zip -d /usr/local/ && \
-    rm /tmp/gradle-$GRADLE_VERSION-bin.zip && \
-    mv /usr/local/gradle-$GRADLE_VERSION /usr/local/gradle && \
+    curl -sL -0 https://services.gradle.org/distributions/gradle-2.6-bin.zip -o /tmp/gradle-2.6-bin.zip && \
+    unzip /tmp/gradle-2.6-bin.zip -d /usr/local/ && \
+    rm /tmp/gradle-2.6-bin.zip && \
+    mv /usr/local/gradle-2.6 /usr/local/gradle && \
     ln -sf /usr/local/gradle/bin/gradle /usr/local/bin/gradle
 
 # Install OpenShift clients.
 
-ARG OC_VERSION=3.11.43
-ARG ODO_VERSION=0.0.14
-RUN curl -s -o /tmp/oc.tar.gz "https://mirror.openshift.com/pub/openshift-v3/clients/$OC_VERSION/linux/oc.tar.gz" && \
+RUN curl -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v3/clients/3.10.79/linux/oc.tar.gz && \
     tar -C /usr/local/bin -zxvf /tmp/oc.tar.gz oc && \
+    mv /usr/local/bin/oc /usr/local/bin/oc-3.10.79 && \
     rm /tmp/oc.tar.gz && \
-    curl -sL -o /usr/local/bin/odo https://github.com/redhat-developer/odo/releases/download/v$ODO_VERSION/odo-linux-amd64 && \
-    chmod +x /usr/local/bin/odo
+    curl -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v3/clients/3.11.44/linux/oc.tar.gz && \
+    tar -C /usr/local/bin -zxvf /tmp/oc.tar.gz oc && \
+    mv /usr/local/bin/oc /usr/local/bin/oc-3.11.44 && \
+    rm /tmp/oc.tar.gz
+
+RUN curl -sL -o /usr/local/bin/odo-0.0.14 https://github.com/redhat-developer/odo/releases/download/v0.0.14/odo-linux-amd64 && \
+    chmod +x /usr/local/bin/odo-0.0.14
 
 # Install Kubernetes client.
 
-ARG KUBECTL_VERSION=1.11.0
-RUN curl -sL -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v$KUBECTL_VERSION/bin/linux/amd64/kubectl && \
-    chmod +x /usr/local/bin/kubectl
+RUN curl -sL -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v1.10.0/bin/linux/amd64/kubectl && \
+    mv /usr/local/bin/kubectl /usr/local/bin/kubectl-1.10.0 && \
+    chmod +x /usr/local/bin/kubectl-1.10.0 && \
+    curl -sL -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v1.11.0/bin/linux/amd64/kubectl && \
+    mv /usr/local/bin/kubectl /usr/local/bin/kubectl-1.11.0 && \
+    chmod +x /usr/local/bin/kubectl-1.11.0
 
 # Common environment variables.
 
@@ -97,7 +102,7 @@ RUN HOME=/opt/workshop && \
     mkdir /opt/app-root/node_modules && \
     ln -s /opt/app-root/node_modules /opt/workshop/node_modules && \
     npm install express http-proxy-middleware express-basic-auth \
-        simple-oauth2 uuid express-session && \
+        simple-oauth2 uuid express-session pug && \
     chown -R 1001:0 /opt/app-root/node_modules && \
     fix-permissions /opt/app-root/node_modules
 
@@ -128,6 +133,9 @@ RUN source scl_source enable rh-python36 && \
     virtualenv /opt/app-root && \
     source /opt/app-root/bin/activate && \
     pip install -U pip setuptools wheel && \
+    ln -s /opt/workshop/bin/oc /opt/app-root/bin/oc && \
+    ln -s /opt/workshop/bin/odo /opt/app-root/bin/odo && \
+    ln -s /opt/workshop/bin/kubectl /opt/app-root/bin/kubectl && \
     chown -R 1001:0 /opt/app-root && \
     fix-permissions /opt/app-root -P
 
