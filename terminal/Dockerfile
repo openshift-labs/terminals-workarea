@@ -13,7 +13,6 @@ RUN HOME=/root && \
 
 # Install Python.
 
-ENV PYTHON_VERSION=3.6
 RUN HOME=/root && \
     INSTALL_PKGS="rh-python36 rh-python36-python-devel \
         rh-python36-python-setuptools rh-python36-python-pip \
