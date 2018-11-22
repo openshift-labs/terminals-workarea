@@ -23,8 +23,7 @@
         },
         {
             "name": "ADMIN_USERS",
-            "value": "opentlc-mgr",
-            "required": false
+            "value": "opentlc-mgr"
         },
         {
             "name": "IDLE_TIMEOUT",

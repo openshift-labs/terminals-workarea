@@ -33,8 +33,7 @@
         },
         {
             "name": "ADMIN_USERS",
-            "value": "opentlc-mgr",
-            "required": false
+            "value": "opentlc-mgr"
         },
         {
             "name": "IDLE_TIMEOUT",
@@ -42,8 +41,7 @@
         },
         {
             "name": "TERMINAL_IMAGE",
-            "value": "",
-            "required": false
+            "value": ""
         },
         {
             "name": "OC_VERSION",
