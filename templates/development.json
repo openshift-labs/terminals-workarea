@@ -45,18 +45,15 @@
         },
         {
             "name": "OC_VERSION",
-            "value": "3.11",
-            "required": true
+            "value": ""
         },
         {
             "name": "ODO_VERSION",
-            "value": "0.0.15",
-            "required": true
+            "value": ""
         },
         {
             "name": "KUBECTL_VERSION",
-            "value": "1.11",
-            "required": true
+            "value": ""
         }
     ],
     "objects": [

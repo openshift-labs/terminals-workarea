@@ -13,6 +13,36 @@ if [[ "$STATUS" != "0" ]]; then
     rm /tmp/passwd
 fi
 
+# Try and work out the correct version of the command line tools to use
+# if not explicitly defined by the template. This assumes you will be
+# using the same cluster the deployment is to.
+
+if [ -z "$KUBECTL_VERSION" ]; then
+    KUBECTL_VERSION=`/usr/local/bin/kubectl-1.11.0 version -o json | \
+        python -c 'import sys, json; \
+        info = json.loads(sys.stdin.read())["serverVersion"]; \
+        print("%s.%s" % (info["major"], info["minor"]))'`
+fi
+
+if [ -z "$OC_VERSION" ]; then
+    case "$KUBECTL_VERSION" in
+        1.10|1.10+)
+            OC_VERSION=3.10
+            ;;
+        1.11|1.11+)
+            OC_VERSION=3.11
+            ;;
+    esac
+fi
+
+if [ -z "$ODO_VERSION" ]; then
+    ODO_VERSION=0.0.15
+fi
+
+export OC_VERSION
+export KUBECTL_VERSION
+export ODO_VERSION
+
 # Setup 'oc' client in advance if configured to be using local OpenShift.
 
 CA_FILE="/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"

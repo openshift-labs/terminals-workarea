@@ -41,3 +41,5 @@ Using project "user1".
 ```
 
 Login using the ``oc login`` command is done against the internal REST API access point for the cluster, using information automatically set within the user environment. It is not necessary to provide the URL for the OpenShift cluster if logging in to the same cluster. If prompted to, you will need to accept the certificate.
+
+The command for deploying the user environments will use pre-built images hosted on the quay.io image registry. The image for the user environment has versions of ``oc`` and ``kubectl`` for multiple OpenShift versions and will automatically use the appropriate version for the OpenShift cluster the user environments are running in.
