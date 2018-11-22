@@ -14,6 +14,16 @@
             "required": true
         },
         {
+            "name": "GIT_REPOSITORY_URL",
+            "value": "https://github.com/openshift-labs/workshop-terminals.git",
+            "required": true
+        },
+        {
+            "name": "GIT_REPOSITORY_REF",
+            "value": "develop",
+            "required": true
+        },
+        {
             "name": "MEMORY_SIZE",
             "value": "512Mi"
         },
@@ -171,7 +181,8 @@
                 "source": {
                     "type": "Git",
                     "git": {
-                        "uri": "https://github.com/openshift-labs/workshop-terminals.git"
+                        "uri": "${GIT_REPOSITORY_URL}",
+                        "ref": "${GIT_REPOSITORY_REF}"
                     },
                     "contextDir": "jupyterhub"
                 },
@@ -416,7 +427,8 @@
                 "source": {
                     "type": "Git",
                     "git": {
-                        "uri": "https://github.com/openshift-labs/workshop-terminals.git"
+                        "uri": "${GIT_REPOSITORY_URL}",
+                        "ref": "${GIT_REPOSITORY_REF}"
                     },
                     "contextDir": "terminal"
                 },
