@@ -47,7 +47,7 @@
         },
         {
             "name": "ODO_VERSION",
-            "value": "0.0.14",
+            "value": "0.0.15",
             "required": true
         },
         {

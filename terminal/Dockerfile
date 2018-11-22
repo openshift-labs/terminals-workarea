@@ -58,8 +58,8 @@ RUN curl -s -o /tmp/oc.tar.gz https://mirror.openshift.com/pub/openshift-v3/clie
     mv /usr/local/bin/oc /usr/local/bin/oc-3.11.44 && \
     rm /tmp/oc.tar.gz
 
-RUN curl -sL -o /usr/local/bin/odo-0.0.14 https://github.com/redhat-developer/odo/releases/download/v0.0.14/odo-linux-amd64 && \
-    chmod +x /usr/local/bin/odo-0.0.14
+RUN curl -sL -o /usr/local/bin/odo-0.0.15 https://github.com/redhat-developer/odo/releases/download/v0.0.15/odo-linux-amd64 && \
+    chmod +x /usr/local/bin/odo-0.0.15
 
 # Install Kubernetes client.
 
