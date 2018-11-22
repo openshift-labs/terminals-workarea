@@ -24,8 +24,8 @@ if [ x"$KUBERNETES_PORT_443_TCP_ADDR" != x"" ]; then
         OC_CA_ARGS="--insecure-skip-tls-verify"
     fi
 
-    oc config set-cluster local $OC_CA_ARGS \
-            --server "https://$KUBERNETES_PORT_443_TCP_ADDR" 
+    oc config set-cluster local $OC_CA_ARGS --server \
+        "https://$KUBERNETES_PORT_443_TCP_ADDR:$KUBERNETES_PORT_443_TCP_PORT" 
 
     oc config set-context local --cluster local
     oc config use-context local
