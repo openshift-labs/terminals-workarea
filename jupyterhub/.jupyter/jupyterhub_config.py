@@ -42,25 +42,24 @@ c.KubeSpawner.pod_name_template = '%s-user-{username}' % (application_name)
 
 c.Spawner.mem_limit = convert_size_to_bytes(os.environ['MEMORY_SIZE'])
 
-# Work out the public server address for the OpenShift REST API. Don't
-# know how to get this via the REST API client so do a raw request to
-# get it. Make sure request is done in a session so connection is closed
-# and later calls against REST API don't attempt to reuse it. This is
-# just to avoid potential for any problems with connection reuse.
+# Work out the public server address for the OpenShift OAuth enpoint.
+# Make sure request is done in a session so connection is closed and
+# later calls against REST API don't attempt to reuse it. This is just
+# to avoid potential for any problems with connection reuse.
 
 server_url = 'https://openshift.default.svc.cluster.local'
-api_url = '%s/oapi' % server_url
+oauth_metadata_url = '%s/.well-known/oauth-authorization-server' % server_url
 
 with requests.Session() as session:
-    response = session.get(api_url, verify=False)
+    response = session.get(oauth_metadata_url, verify=False)
     data = json.loads(response.content.decode('UTF-8'))
-    address = data['serverAddressByClientCIDRs'][0]['serverAddress']
+    address = data['issuer']
 
 # Enable the OpenShift authenticator. The OPENSHIFT_URL environment
 # variable must be set before importing the authenticator as it only
 # reads it when module is first imported.
 
-os.environ['OPENSHIFT_URL'] = 'https://%s' % address
+os.environ['OPENSHIFT_URL'] = address
 
 from oauthenticator.openshift import OpenShiftOAuthenticator
 c.JupyterHub.authenticator_class = OpenShiftOAuthenticator
