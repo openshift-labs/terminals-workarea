@@ -42,7 +42,7 @@ c.KubeSpawner.pod_name_template = '%s-user-{username}' % (application_name)
 
 c.Spawner.mem_limit = convert_size_to_bytes(os.environ['MEMORY_SIZE'])
 
-# Work out the public server address for the OpenShift OAuth enpoint.
+# Work out the public server address for the OpenShift OAuth endpoint.
 # Make sure request is done in a session so connection is closed and
 # later calls against REST API don't attempt to reuse it. This is just
 # to avoid potential for any problems with connection reuse.
