@@ -88,5 +88,5 @@ fi
 
 # Run supervisord.
 
-exec /opt/workshop/bin/supervisord --nodaemon \
+exec supervisord --nodaemon \
     --configuration /opt/workshop/etc/supervisord.conf

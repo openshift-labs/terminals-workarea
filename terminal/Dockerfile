@@ -5,8 +5,8 @@ USER root
 # Install additional common utilities.
 
 RUN HOME=/root && \
-    INSTALL_PKGS="nano python-devel" && \
-    yum install -y centos-release-scl && \
+    INSTALL_PKGS="supervisor nano python-devel" && \
+    yum install -y centos-release-scl epel-release && \
     yum -y --setopt=tsflags=nodocs install --enablerepo=centosplus $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
     yum -y clean all --enablerepo='*'
@@ -78,7 +78,7 @@ ENV PYTHONUNBUFFERED=1 \
     LANG=en_US.UTF-8 \
     PIP_NO_CACHE_DIR=off
 
-# Install Supervisor and Butterfly using system Python 2.7.
+# Install Butterfly using system Python 2.7.
 
 RUN HOME=/opt/workshop && \
     mkdir -p /opt/workshop && \
@@ -88,8 +88,6 @@ RUN HOME=/opt/workshop && \
     $HOME/.local/bin/pip install --no-cache-dir --user virtualenv && \
     $HOME/.local/bin/virtualenv /opt/workshop && \
     source /opt/workshop/bin/activate && \
-    pip install supervisor==3.3.4 && \
-    mkdir -p /opt/app-root/etc && \
     pip install butterfly==3.2.5 && \
     rm /opt/app-root/etc/scl_enable
 
