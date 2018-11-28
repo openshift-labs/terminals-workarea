@@ -222,8 +222,8 @@ if (jupyterhub_client_id) {
 
 var default_route = process.env.DEFAULT_ROUTE || '/terminal';
 
-var default_index = '/opt/workshop/routes/index.js';
-var override_index = '/opt/app-root/routes/index.js';
+var default_index = '/opt/workshop/gateway/routes/index.js';
+var override_index = '/opt/app-root/gateway/routes/index.js';
 
 if (fs.existsSync(override_index)) {
     console.log('Set index to', override_index); 
@@ -260,8 +260,8 @@ function install_routes(directory) {
     }
 }
 
-install_routes('/opt/app-root/routes');
-install_routes('/opt/workshop/routes');
+install_routes('/opt/app-root/gateway/routes');
+install_routes('/opt/workshop/gateway/routes');
 
 // Start listening for requests.
 

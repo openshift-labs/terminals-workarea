@@ -12,6 +12,6 @@ if [ x"$JUPYTERHUB_SERVICE_PREFIX" != x"" ]; then
 fi
 
 
-cd /opt/workshop
+cd /opt/workshop/gateway
 
-exec node /opt/workshop/gateway.js
+exec npm start
