@@ -120,6 +120,7 @@ RUN echo "auth required pam_wheel.so use_uid" >> /etc/pam.d/su && \
 
 RUN mkdir -p /opt/app-root/etc/init.d && \
     mkdir -p /opt/app-root/etc/profile.d && \
+    mkdir -p /opt/app-root/etc/supervisor && \
     mkdir -p /opt/app-root/gateway/routes && \
     chown -R 1001:0 /opt/app-root && \
     fix-permissions /opt/app-root
