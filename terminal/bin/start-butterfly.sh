@@ -4,10 +4,11 @@ set -eo pipefail
 
 set -x
 
-URI_ROOT_PATH=
+URI_ROOT_PATH=/terminal
+export URI_ROOT_PATH
 
 if [ x"$JUPYTERHUB_SERVICE_PREFIX" != x"" ]; then
-    URI_ROOT_PATH=${JUPYTERHUB_SERVICE_PREFIX%/}
+    URI_ROOT_PATH=${JUPYTERHUB_SERVICE_PREFIX%/}/terminal
 fi
 
 # Now execute the program. We need to supply a startup script for the
@@ -26,6 +27,6 @@ fi
 cd /opt/workshop/butterfly
 
 exec /opt/workshop/butterfly/bin/butterfly.server.py --port=8081 \
-    --host=0.0.0.0 --uri-root-path="$URI_ROOT_PATH/terminal" --unsecure \
+    --host=0.0.0.0 --uri-root-path="$URI_ROOT_PATH" --unsecure \
     --i-hereby-declare-i-dont-want-any-security-whatsoever \
     --shell=/opt/workshop/butterfly/start-terminal.sh --motd=$MOTD_FILE
