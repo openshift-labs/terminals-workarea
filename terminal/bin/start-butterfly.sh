@@ -23,7 +23,9 @@ if [ -f /opt/app-root/etc/motd ]; then
     MOTD_FILE=/opt/app-root/etc/motd
 fi
 
+cd /opt/workshop/butterfly
+
 exec /opt/workshop/butterfly/bin/butterfly.server.py --port=8081 \
     --host=0.0.0.0 --uri-root-path="$URI_ROOT_PATH/terminal" --unsecure \
     --i-hereby-declare-i-dont-want-any-security-whatsoever \
-    --shell=/opt/workshop/bin/start-terminal.sh --motd=$MOTD_FILE
+    --shell=/opt/workshop/butterfly/start-terminal.sh --motd=$MOTD_FILE

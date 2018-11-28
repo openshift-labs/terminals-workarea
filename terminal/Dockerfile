@@ -80,15 +80,17 @@ ENV PYTHONUNBUFFERED=1 \
 
 # Install Butterfly using system Python 2.7.
 
+COPY butterfly /opt/workshop/butterfly
+
 RUN HOME=/opt/workshop/butterfly && \
-    mkdir -p /opt/workshop/butterfly && \
+    cd /opt/workshop/butterfly && \
     curl -s -o /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py && \
     /usr/bin/python /tmp/get-pip.py --user && \
     rm -f /tmp/get-pip.py && \
     $HOME/.local/bin/pip install --no-cache-dir --user virtualenv && \
     $HOME/.local/bin/virtualenv /opt/workshop/butterfly && \
     source /opt/workshop/butterfly/bin/activate && \
-    pip install butterfly==3.2.5 && \
+    pip install --no-cache-dir -r requirements.txt && \
     rm /opt/app-root/etc/scl_enable
 
 # Install gateway application using SCL Node.js 8.
