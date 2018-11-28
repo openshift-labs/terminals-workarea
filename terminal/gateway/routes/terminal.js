@@ -6,7 +6,7 @@ var proxy = require('http-proxy-middleware');
 // same session and not a new one each time if refresh the web browser
 // or access same URL from another browser window.
 
-app = express();
+var app = express();
 
 app.get('^/?$', function (req, res) {
     res.redirect(req.baseUrl + '/session/1');
