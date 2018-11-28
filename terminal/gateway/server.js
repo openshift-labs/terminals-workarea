@@ -243,8 +243,8 @@ else {
 // Setup routes for handlers.
 
 function install_routes(directory) {
-    var files = fs.readdirSync(directory);
     if (fs.existsSync(directory)) {
+        var files = fs.readdirSync(directory);
         for (var i=0; i<files.length; i++) {
             var filename = files[i];
             if (filename.endsWith('.js')) {
