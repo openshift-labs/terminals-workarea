@@ -237,7 +237,7 @@ else {
     console.log('Set index to', default_route); 
     app.get('^' + uri_root_path + '/?$', function (req, res) {
         res.redirect(uri_root_path + default_route);
-    })
+    });
 }
 
 // Setup routes for handlers.
@@ -245,15 +245,26 @@ else {
 function install_routes(directory) {
     if (fs.existsSync(directory)) {
         var files = fs.readdirSync(directory);
+
         for (var i=0; i<files.length; i++) {
             var filename = files[i];
+
             if (filename.endsWith('.js')) {
                 var basename = filename.split('.').slice(0, -1).join('.');
+
                 if (basename != 'index') {
+                    var prefix = uri_root_path + '/' + basename;
+
+                    app.get('^' + prefix + '$', function (req, res) {
+                        res.redirect(req.url + '/');
+                    });
+
                     var pathname = path.join(directory, filename);
-                    console.log('Install route for', pathname);
                     var router = require(pathname);
-                    app.use(uri_root_path + '/' + basename, router);
+
+                    console.log('Install route for', pathname);
+
+                    app.use(prefix + '/', router);
                 }
             }
         }
