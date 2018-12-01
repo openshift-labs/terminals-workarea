@@ -256,7 +256,7 @@ function install_routes(directory) {
                     var prefix = uri_root_path + '/' + basename;
 
                     app.get('^' + prefix + '$', function (req, res) {
-                        res.redirect(req.url + '/');
+                        res.redirect(url.parse(req.url).pathname + '/');
                     });
 
                     var pathname = path.join(directory, filename);
